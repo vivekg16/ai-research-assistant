@@ -13,9 +13,13 @@ def extract_text_from_pdf(uploaded_file):
     return text
 
 import openai
+import os
+
+# Get OpenAI API key from Streamlit Secrets
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 def summarize_text(text):
-    client = openai.OpenAI()  # Use new OpenAI client
+    client = openai.OpenAI(api_key=OPENAI_API_KEY)  # Use the API key securely
     response = client.chat.completions.create(
         model="gpt-4",
         messages=[{"role": "user", "content": f"Summarize this text: {text}"}]
