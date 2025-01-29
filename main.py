@@ -1,11 +1,15 @@
 import PyPDF2
+import io
 
-def extract_text_from_pdf(pdf_path):
+
+def extract_text_from_pdf(uploaded_file):
     text = ""
-    with open(pdf_path, "rb") as file:
-        reader = PyPDF2.PdfReader(file)
-        for page in reader.pages:
-            text += page.extract_text() + "\n"
+    # Use BytesIO to handle the uploaded file correctly
+    pdf_reader = PyPDF2.PdfReader(io.BytesIO(uploaded_file.read()))
+
+    for page in pdf_reader.pages:
+        text += page.extract_text() + "\n"
+
     return text
 
 import openai
@@ -96,7 +100,8 @@ st.title("AI Research Assistant")
 uploaded_file = st.file_uploader("Upload your research paper", type="pdf")
 
 if uploaded_file:
-    text = extract_text_from_pdf(uploaded_file)
+    if uploaded_file is not None:
+        text = extract_text_from_pdf(uploaded_file)
     summary = summarize_text(text)
     st.write("### Summary:")
     st.write(summary)
