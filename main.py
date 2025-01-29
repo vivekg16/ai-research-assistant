@@ -14,14 +14,13 @@ def extract_text_from_pdf(uploaded_file):
 
 import openai
 
-openai.api_key = "your_api_key"
-
 def summarize_text(text):
-    response = openai.ChatCompletion.create(
+    client = openai.OpenAI()  # Use new OpenAI client
+    response = client.chat.completions.create(
         model="gpt-4",
-        messages=[{"role": "user", "content": f"Summarize this text in key points: {text}"}]
+        messages=[{"role": "user", "content": f"Summarize this text: {text}"}]
     )
-    return response["choices"][0]["message"]["content"]
+    return response.choices[0].message.content
 
 
 import requests
